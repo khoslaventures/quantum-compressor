@@ -9,8 +9,11 @@ from cirq.google import XmonSimulator
 #takes in parameters for a simulation of n qubits to be evolved to a state J
 #Jmax, L and T are for defining the adiabatic evolution: the maximum J-value for evolution,
 #the number of steps, and time of evolution, respectively.
+#returns the circuit
 def ising_circuit(n, J, Jmax, L, T):
     #for L = 2000 and T = 100, the circuit should produce very accurate values
+    #It makes for very slow runtimes, so we've been using L = 200 and T = 10,
+    #which Kraus claimed to produce decent enough results
     dt = T / (L + 1)
     m = int(np.log2(n)) + 1
     qubits = cirq.LineQubit.range(m)
@@ -24,27 +27,32 @@ def ising_circuit(n, J, Jmax, L, T):
     for i in range(0, m - 1):
         circuit.append([bit_flip.on(qubits[i])])
         
-    
+    #LJ determines the number of adiabatic steps to take
     LJ = int(J * L / Jmax)
     for l in range(0, LJ):
         Jl = Jmax * l / L
         
-        
+        #Rotate qubit m
         R0l = R0(-4 * dt)
         circuit.append([R0l.on(qubits[m-1])])
-        
+
+		#shift qubit states up so the rotation matrix Rl acts on the states correctly        
         shiftu = SHIFTU(m)
         circuit.append(shiftu(*qubits))
         
         #application of Rl, a rotation matrix on the whole state
+        #phil is the angle
+        #We apply the rotation gate (r) to the pair of states we care about (they are on qubit m after shifting)
         phil = 2 * Jl * dt
         r = cirq.SingleQubitMatrixGate(np.array([[np.cos(phil), -np.sin(phil)], [np.sin(phil), np.cos(phil)]]))
         circuit.append([r.on(qubits[m-1])])
-        
+        #We then apply a controlled inverse of (r), with all the other qubits as controls
+        #This effectively gives us our desired Rl on the wavefunction
         controls = qubits[0:m-1]
         Cr = cirq.ControlledGate(sub_gate = (r**-1), control_qubits = controls)
         circuit.append(Cr.on(qubits[m - 1]))
     
+    	#Shift back down for R0 to work correctly
         shiftd = SHIFTD(m)
         circuit.append(shiftd(*qubits))
         
@@ -54,12 +62,14 @@ def ising_circuit(n, J, Jmax, L, T):
     circuit.append([cirq.measure(qubits[m - 1], key='x')])
     return circuit
 
-#rotation matrix on the qubit we will eventually measure
+#rotation matrix of theta on the single qubit we will eventually measure
+#returns a Y rotation matrix
 def R0(theta):
     return cirq.Ry(theta)
 
 #SHIFTU and SHIFTD are for the proper application of Rl, they 'shift' all of the wavefunction's states by one
 #i.e. SHIFTU(a|00> + b|01> + c|10> + d|11>) = b|00> + c|01> + d|10> + a|11>)
+#The unitary simply a shifted identity matrix
 class SHIFTU(cirq.Gate):
     def __init__(self, num_qubits):
         super(SHIFTU, self)
@@ -94,7 +104,8 @@ class SHIFTD(cirq.Gate):
                                ) -> protocols.CircuitDiagramInfo:
         return protocols.CircuitDiagramInfo(wire_symbols=(_shift_to_diagram_symbol(self._unitary_(), args, "ShiftD")), connected = True)
 
-#This is just for display purposes for SHIFTU, SHIFTD
+#This is just for display purposes for SHIFTU, SHIFTD in the circuit
+#based on qubitMatrixgate from cirq docs.
 def _shift_to_diagram_symbol(matrix: np.ndarray,
                               args: protocols.CircuitDiagramInfoArgs, shift: str) -> str:
     if args.precision is not None:
