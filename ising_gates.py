@@ -12,14 +12,18 @@ def R0(theta):
     """
     return cirq.Ry(theta)
 
-# SHIFTU and SHIFTD are for the proper application of Rl, they 'shift' all of the wavefunction's states by one
-# i.e. SHIFTU(a|00> + b|01> + c|10> + d|11>) = b|00> + c|01> + d|10> + a|11>)
-# The unitary simply a shifted identity matrix
 
-
+#SHIFTU and SHIFTD are for the proper application of Rl. They shift the overall state's wavefunction
 class SHIFTU(cirq.Gate):
-    """
-    TODO(allen): Explain SHIFTU here!
+    """Gate acting on n qubits that shifts the basis of the all the wavefunction's states up by one using a 
+    (2^n x 2^n) shifted identity matrix. For a single qubit, this is an X gate. For two-qubit gate (4x4 unitary),
+    the unitary will be : [[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0]]
+    i.e. SHIFTU(a|00> + b|01> + c|10> + d|11>) = b|00> + c|01> + d|10> + a|11>)
+
+    Args:
+    	num_qubits: the number of qubits on which the gate is to be applied
+    Returns: a gate with corresponding unitary as described above
+
     """
 
     def __init__(self, num_qubits):
@@ -36,14 +40,20 @@ class SHIFTU(cirq.Gate):
 
     def _circuit_diagram_info_(self, args: protocols.CircuitDiagramInfoArgs
                                ) -> protocols.CircuitDiagramInfo:
-        return protocols.CircuitDiagramInfo(wire_symbols=(_shift_to_diagram_symbol(self._unitary_(), args, "ShiftU")), connected=True)
+        return protocols.CircuitDiagramInfo(wire_symbols=(_shift_to_diagram_symbol(args, "ShiftU")), connected=True)
 
 #SHIFTD = SHIFTU^-1
-
-
 class SHIFTD(cirq.Gate):
-    """
-    TODO(allen): Explain SHIFTD here!
+    """Gate acting on n qubits that shifts the basis of the all the wavefunction's states down by one using a 
+    (2^n x 2^n) shifted identity matrix. For a single qubit, this is an X gate. For two-qubit gate (4x4 unitary),
+    the unitary will be : [[0, 0, 0, 1], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]]
+    i.e. SHIFTD(a|00> + b|01> + c|10> + d|11>) = d|00> + a|01> + b|10> + c|11>)
+
+
+    Args:
+    	num_qubits: the number of qubits on which the gate is to be applied
+    Returns: a gate with corresponding unitary as described above
+
     """
 
     def __init__(self, num_qubits):
@@ -60,20 +70,20 @@ class SHIFTD(cirq.Gate):
 
     def _circuit_diagram_info_(self, args: protocols.CircuitDiagramInfoArgs
                                ) -> protocols.CircuitDiagramInfo:
-        return protocols.CircuitDiagramInfo(wire_symbols=(_shift_to_diagram_symbol(self._unitary_(), args, "ShiftD")), connected=True)
+        return protocols.CircuitDiagramInfo(wire_symbols=(_shift_to_diagram_symbol(args, "ShiftD")), connected=True)
 
 # This is just for display purposes for SHIFTU, SHIFTD in the circuit
-# based on qubitMatrixgate from cirq docs.
+# based on cirq.ops.matrix_gates from cirq docs.
+def _shift_to_diagram_symbol(args: protocols.CircuitDiagramInfoArgs, shift: str) -> str:
 
+    """This takes the shift gates and makes them display more nicely on the circuit
 
-def _shift_to_diagram_symbol(matrix: np.ndarray,
-                             args: protocols.CircuitDiagramInfoArgs, shift: str) -> str:
-
+    Args:
+    	args: arguements from the circuit, namely (known_qubit_count) for the number of qubits to act on and 
+    		(use_unicode_characters) to make sure it is fine to use unicode
+    	shift: type of shift gate to display
+	Returns: Tuple of strings to be displayed on circuit
     """
-    TODO(allen): Explain _shift_to_diagram_symbol here!
-    """
-    if args.precision is not None:
-        matrix = matrix.round(args.precision)
     dimensionToAdd = args.known_qubit_count - 2
     result = []
     if args.use_unicode_characters:
