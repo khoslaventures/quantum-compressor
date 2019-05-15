@@ -29,8 +29,9 @@ M(J), the magnetization can be measured by:
 3. Apply Z on a single qubit and measure to obtain the transverse magnetization
    M(J)
 
-TODO(akash): Add more on compression of the simualtion along with the algorithm.
-TODO(akash): Provide example of circuit with given inputs in docstring
+As this adiabatic evolution together with the measurement of the magnetization
+is a matchgate circuit, the whole computation can be compressed into a
+universal quantum computation running on only m = log(n) qubits.
 
 === REFERENCE ===
 
@@ -38,6 +39,7 @@ M. Hebenstreit, D. Alsina, J. I. Latorre: “Compressed quantum computation usin
 the IBM Quantum Experience”, 2017, Phys. Rev. A 95, 052339 (2017);
 arXiv:1701.02970. DOI: 10.1103/PhysRevA.95.052339.
 
+TODO(akash): Provide example of circuit with given inputs in docstring
 """
 
 
