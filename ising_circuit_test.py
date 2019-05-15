@@ -89,8 +89,8 @@ def test_j_is_1_decomposition():
         v = hist[k]
         hist[k] = v
 
-    assert(hist[0] in range(7, 11))
-    assert(hist[1] in range(4))
+    assert(hist[0] in range(6, 11))
+    assert(hist[1] in range(5))
 
     # Make circuit for four qubit Ising chain using two qubits.
     # num_qubits is 4, J = 1, J_max = 2, L = 2400, T = 240.1, dt = 0.1
@@ -102,5 +102,5 @@ def test_j_is_1_decomposition():
         v = hist[k]
         hist[k] = v
 
-    assert(hist[0] in range(7, 11))
-    assert(hist[1] in range(4))
+    assert(hist[0] in range(6, 11))
+    assert(hist[1] in range(5))
