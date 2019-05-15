@@ -45,3 +45,8 @@ def test_shiftd(n_qubits):
     result = simulator.simulate(circuit, qubit_order=qubits)
 
     assert (origin.final_state == result.final_state).all()
+
+@pytest.mark.parametrize('n_qubits', [4, 8, 16, 32])
+def test_printing(n_qubits):
+	testCircuit = ic.ising_circuit(n_qubits, 0.1, 2, 200, 10)
+	assert isinstance(testCircuit.to_text_diagram(), str)
