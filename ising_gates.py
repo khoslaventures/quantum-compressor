@@ -2,11 +2,14 @@ import cirq
 import numpy as np
 from cirq import protocols
 
-# rotation matrix of theta on the single qubit we will eventually measure
-# returns a Y rotation matrix
-
 
 def R0(theta):
+    """Rotation matrix of theta on the single qubit we will eventually measure.
+
+    Args:
+        theta: Angle of rotation
+    Returns: a Y rotation matrix
+    """
     return cirq.Ry(theta)
 
 # SHIFTU and SHIFTD are for the proper application of Rl, they 'shift' all of the wavefunction's states by one
@@ -15,6 +18,10 @@ def R0(theta):
 
 
 class SHIFTU(cirq.Gate):
+    """
+    TODO(allen): Explain SHIFTU here!
+    """
+
     def __init__(self, num_qubits):
         super(SHIFTU, self)
         self._num_qubits = num_qubits
@@ -35,6 +42,10 @@ class SHIFTU(cirq.Gate):
 
 
 class SHIFTD(cirq.Gate):
+    """
+    TODO(allen): Explain SHIFTD here!
+    """
+
     def __init__(self, num_qubits):
         super(SHIFTD, self)
         self._num_qubits = num_qubits
