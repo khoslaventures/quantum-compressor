@@ -1,7 +1,7 @@
 import cirq
 import pytest
 
-import ising_gate as ig
+import ising_gates as ig
 from ising_circuit import IsingCircuit
 
 # @Source This is based on the pytests from the homeworks earlier in the semester
