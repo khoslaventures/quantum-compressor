@@ -1,6 +1,8 @@
 import cirq
 import numpy as np
 
+from ising_gates import R0, SHIFTD, SHIFTU
+
 
 """Demonstrates a compressed simulation of the transverse field 1D-Ising
 Interaction. This is an example of compressed quantum computation simulating
@@ -63,7 +65,8 @@ def ising_circuit(n, J, J_max, L, T):
     qubits = cirq.LineQubit.range(m)
     circuit = cirq.Circuit()
 
-    # Initial states - H and S gates are for |+>(Y) state, bit flip is for mixed state
+    # Initial states - H and S gates are for |+>(Y) state, bit flip is for
+    # mixed state
     circuit.append([cirq.H(qubits[m - 1])])
     circuit.append([cirq.S(qubits[m - 1])])
 
@@ -80,19 +83,23 @@ def ising_circuit(n, J, J_max, L, T):
         R0l = R0(-4 * dt)
         circuit.append([R0l.on(qubits[m-1])])
 
-        # shift qubit states up so the rotation matrix Rl acts on the states correctly
+        # shift qubit states up so the rotation matrix Rl acts on the states
+        # correctly
         shiftu = SHIFTU(m)
         circuit.append(shiftu(*qubits))
 
         # application of Rl, a rotation matrix on the whole state
-        # phil is the angle
-        # We apply the rotation gate (r) to the pair of states we care about (they are on qubit m after shifting)
-        phil = 2 * Jl * dt
+        # phi_l is the angle
+        # We apply the rotation gate (r) to the pair of states we care about
+        # (they are on qubit m after shifting)
+        phi_l = 2 * Jl * dt
         r = cirq.SingleQubitMatrixGate(
-            np.array([[np.cos(phil), -np.sin(phil)], [np.sin(phil), np.cos(phil)]]))
+            np.array([[np.cos(phi_l), -np.sin(phi_l)], [np.sin(phi_l),
+                                                        np.cos(phi_l)]]))
         circuit.append([r.on(qubits[m-1])])
-        # We then apply a controlled inverse of (r), with all the other qubits as controls
-        # This effectively gives us our desired Rl on the wavefunction
+        # We then apply a controlled inverse of (r), with all the other qubits
+        # as controls This effectively gives us our desired Rl on the
+        # wavefunction
         controls = qubits[0:m-1]
         Cr = cirq.ControlledGate(sub_gate=(r**-1), control_qubits=controls)
         circuit.append(Cr.on(qubits[m - 1]))
