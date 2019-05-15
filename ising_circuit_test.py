@@ -1,9 +1,11 @@
 import cirq
 import numpy as np
+import pytest
 
 from ising_circuit import IsingCircuit
 
 
+@pytest.mark.repeat(20)
 def test_wave_function():
     """Test the wave function outputs. They should be the same for the
     given paramters."""
@@ -33,6 +35,7 @@ def test_wave_function():
     print(M_wfn)
 
 
+@pytest.mark.repeat(20)
 def test_j_is_1_decomposition():
     """Test the J=1 decomposition against the function generated circuit.
     We take some measurements and expect a small margin of difference."""
