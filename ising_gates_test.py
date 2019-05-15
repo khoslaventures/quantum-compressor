@@ -1,7 +1,4 @@
-import warnings
-
 import cirq
-import numpy as np
 import pytest
 
 import ising_circuit as ic
@@ -11,7 +8,6 @@ import ising_circuit as ic
 # This will test the shift gates on n qubits
 @pytest.mark.parametrize('n_qubits', range(2, 10))
 def test_shiftu(n_qubits):
-
     # Makes a circuit, applies a hadamard to the first qubit, and shifts up
     qubits1 = cirq.LineQubit.range(n_qubits)
     qubits2 = cirq.LineQubit.range(n_qubits)
@@ -32,9 +28,8 @@ def test_shiftu(n_qubits):
 
 @pytest.mark.parametrize('n_qubits', range(2, 10))
 def test_shiftd(n_qubits):
-
-    # Makes a circuit, applies a hadamard to the first qubit, shifts up, then shifts down.
-    # this should show that shiftd == shiftu**-1
+    # Makes a circuit, applies a hadamard to the first qubit, shifts up, then
+    # shifts down. This should show that shiftd == shiftu**-1
     qubits = cirq.LineQubit.range(n_qubits)
     circuit = cirq.Circuit()
     circuit.append([cirq.H(qubits[0])])
@@ -46,7 +41,8 @@ def test_shiftd(n_qubits):
 
     assert (origin.final_state == result.final_state).all()
 
+
 @pytest.mark.parametrize('n_qubits', [4, 8, 16, 32])
 def test_printing(n_qubits):
-	testCircuit = ic.ising_circuit(n_qubits, 0.1, 2, 200, 10)
-	assert isinstance(testCircuit.to_text_diagram(), str)
+    testCircuit = ic.ising_circuit(n_qubits, 0.1, 2, 200, 10)
+    assert isinstance(testCircuit.to_text_diagram(), str)
