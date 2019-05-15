@@ -68,6 +68,10 @@ class SHIFTD(cirq.Gate):
 
 def _shift_to_diagram_symbol(matrix: np.ndarray,
                              args: protocols.CircuitDiagramInfoArgs, shift: str) -> str:
+
+    """
+    TODO(allen): Explain _shift_to_diagram_symbol here!
+    """
     if args.precision is not None:
         matrix = matrix.round(args.precision)
     dimensionToAdd = args.known_qubit_count - 2
