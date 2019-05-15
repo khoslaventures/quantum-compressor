@@ -1,7 +1,8 @@
 import cirq
 import pytest
 
-import ising_circuit as ic
+import ising_gate as ig
+from ising_circuit import IsingCircuit
 
 # @Source This is based on the pytests from the homeworks earlier in the semester
 
@@ -13,7 +14,7 @@ def test_shiftu(n_qubits):
     qubits2 = cirq.LineQubit.range(n_qubits)
     circuit1 = cirq.Circuit()
     circuit1.append([cirq.H(qubits1[0])])
-    circuit1.append(ic.SHIFTU(n_qubits).on(*qubits1))
+    circuit1.append(ig.SHIFTU(n_qubits).on(*qubits1))
     simulator1 = cirq.Simulator()
     result1 = simulator1.simulate(circuit1, qubit_order=qubits1)
     # Second circuit that should match the end state, |+> tensored with |1> * n
@@ -35,8 +36,8 @@ def test_shiftd(n_qubits):
     circuit.append([cirq.H(qubits[0])])
     simulator = cirq.Simulator()
     origin = simulator.simulate(circuit, qubit_order=qubits)
-    circuit.append(ic.SHIFTU(n_qubits).on(*qubits))
-    circuit.append(ic.SHIFTD(n_qubits).on(*qubits))
+    circuit.append(ig.SHIFTU(n_qubits).on(*qubits))
+    circuit.append(ig.SHIFTD(n_qubits).on(*qubits))
     result = simulator.simulate(circuit, qubit_order=qubits)
 
     assert (origin.final_state == result.final_state).all()
@@ -44,5 +45,5 @@ def test_shiftd(n_qubits):
 
 @pytest.mark.parametrize('n_qubits', [4, 8, 16, 32])
 def test_printing(n_qubits):
-    testCircuit = ic.ising_circuit(n_qubits, 0.1, 2, 200, 10)
-    assert isinstance(testCircuit.to_text_diagram(), str)
+    ic = IsingCircuit(n_qubits, 0.1, 2, 200, 10)
+    assert isinstance(ic.circuit.to_text_diagram(), str)

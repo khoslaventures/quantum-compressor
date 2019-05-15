@@ -115,5 +115,6 @@ class IsingCircuit:
         # these are applied for measurement of Y on qubit self.m
         self.circuit.append([cirq.S(self.qubits[self.m - 1])**-1])
         self.circuit.append([cirq.H(self.qubits[self.m - 1])])
+
+    def apply_measurement(self):
         self.circuit.append([cirq.measure(self.qubits[self.m - 1], key='x')])
-        return self.circuit
