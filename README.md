@@ -3,9 +3,9 @@ Demonstrates a compressed simulation of the transverse field 1D-Ising
 Interaction. This is an example of compressed quantum computation simulating
 an Ising chain of n qubits by using only log(n) qubits.
 
-[![Build Status](https://travis-ci.org/khoslaventures/quantum-compressor.svg?branch=master)](https://travis-ci.org/khoslaventures/quantum-compressor)
+Authors: Akash Khosla, Allen Chen, Henry Sun, Sahil Patel, Victor Li
 
-[![codecov](https://codecov.io/gh/khoslaventures/quantum-compressor/branch/master/graph/badge.svg)](https://codecov.io/gh/khoslaventures/quantum-compressor)
+[![Build Status](https://travis-ci.org/khoslaventures/quantum-compressor.svg?branch=master)](https://travis-ci.org/khoslaventures/quantum-compressor) [![codecov](https://codecov.io/gh/khoslaventures/quantum-compressor/branch/master/graph/badge.svg)](https://codecov.io/gh/khoslaventures/quantum-compressor)
 
 ## Instructions
 
